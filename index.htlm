@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>International Lottery Results - GLO & Saudi</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Sarabun', sans-serif; }
+        .glo-blue { background-color: #003366; }
+        .saudi-green { background-color: #006633; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
+
+    <!-- Top Bar -->
+    <div class="glo-blue text-white text-xs py-1 px-4 flex justify-between items-center border-b border-blue-900">
+        <div>
+            <span id="txt-official">International Lottery Portal (GLO & Saudi)</span>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button id="lang-btn" onclick="toggleLanguage()" class="hover:underline flex items-center gap-1 font-semibold">
+                <i class="fa-solid font-bold text-yellow-400 fa-globe"></i> <span id="current-lang">EN</span>
+            </button>
+            <button onclick="openLoginModal()" class="bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-bold px-3 py-1 rounded text-xs">
+                <i class="fa-solid fa-right-to-bracket mr-1"></i> <span id="txt-login-btn">เข้าสู่ระบบ</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Header / Logo Area -->
+    <header class="bg-white shadow-md py-4 px-6 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <div class="w-14 h-14 rounded-full border-2 border-yellow-500 flex items-center justify-center bg-blue-900 text-white font-bold text-xl shadow">
+                INT
+            </div>
+            <div>
+                <h1 id="title-main" class="text-xl font-bold text-blue-900 leading-tight">ระบบตรวจผลสลากนานาชาติ</h1>
+                <p id="title-sub" class="text-xs text-gray-500 tracking-wider">THAI & SAUDI LOTTERY RESULTS</p>
+            </div>
+        </div>
+        <!-- Lottery Country Selector Tabs -->
+        <div class="flex space-x-2">
+            <button onclick="switchLottery('thai')" id="tab-thai" class="px-4 py-2 text-sm font-bold rounded-lg glo-blue text-white shadow transition">
+                🇹🇭 Thai GLO
+            </button>
+            <button onclick="switchLottery('saudi')" id="tab-saudi" class="px-4 py-2 text-sm font-bold rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition">
+                🇸🇦 Saudi Lottery
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
+        
+        <!-- Banner / Date Selector -->
+        <div id="banner-bg" class="bg-gradient-to-r from-blue-900 to-indigo-900 rounded-lg p-6 text-white mb-8 shadow-md transition-all duration-300">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <span id="banner-badge" class="bg-yellow-500 text-slate-900 text-xs font-bold px-2 py-1 rounded uppercase tracking-wider mb-2 inline-block">Official Announcement</span>
+                    <h2 class="text-2xl font-bold mb-1" id="banner-title">ตรวจผลรางวัลสลากกินแบ่งรัฐบาลไทย</h2>
+                    <p class="text-sm text-blue-200" id="banner-desc">ตรวจสอบผลการออกรางวัลสลากกินแบ่งรัฐบาลไทย งวดล่าสุด ได้ทางระบบออนไลน์</p>
+                </div>
+                <div>
+                    <label class="block text-xs text-blue-200 mb-1" id="lbl-select-date">เลือกงวดวันที่:</label>
+                    <select id="draw-date-select" onchange="renderResults()" class="text-gray-900 rounded px-3 py-2 text-sm font-semibold bg-white border border-gray-300">
+                        <!-- Populated via JS -->
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dynamic Results Section -->
+        <section class="bg-white rounded-lg shadow-md p-6 mb-8 border border-gray-200">
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+                <h3 class="text-xl font-bold text-blue-900 flex items-center gap-2" id="results-heading-container">
+                    <i class="fa-solid fa-trophy text-yellow-500"></i>
+                    <span id="title-draw-results">ผลการออกรางวัลสลากกินแบ่งรัฐบาลไทย</span>
+                </h3>
+                <span id="draw-status-badge" class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-ping"></span> Live Results
+                </span>
+            </div>
+
+            <!-- Thai Results Layout -->
+            <div id="thai-results-container">
+                <!-- First Prize -->
+                <div class="text-center bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+                    <h4 class="text-sm font-bold text-gray-600 mb-2 uppercase tracking-wide" id="lbl-prize-1">รางวัลที่ 1 (Prize 1)</h4>
+                    <div class="text-4xl md:text-5xl font-extrabold text-blue-900 tracking-widest font-mono my-2" id="res-thai-1">
+                        ------
+                    </div>
+                    <p class="text-xs text-gray-500" id="lbl-prize-1-val">รางวัลละ 6,000,000 บาท</p>
+                </div>
+
+                <!-- Secondary Prizes Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-gray-50 border border-gray-200 rounded p-4 text-center">
+                        <h5 class="text-xs font-bold text-gray-600 mb-1" id="lbl-3-front">เลขหน้า 3 ตัว (3-Digit Front)</h5>
+                        <div class="text-2xl font-bold text-gray-800 font-mono tracking-widest my-1" id="res-thai-front3">--- , ---</div>
+                        <p class="text-xs text-gray-400">2 รางวัลละ 4,000 บาท</p>
+                    </div>
+                    <div class="bg-gray-50 border border-gray-200 rounded p-4 text-center">
+                        <h5 class="text-xs font-bold text-gray-600 mb-1" id="lbl-3-back">เลขท้าย 3 ตัว (3-Digit Back)</h5>
+                        <div class="text-2xl font-bold text-gray-800 font-mono tracking-widest my-1" id="res-thai-back3">--- , ---</div>
+                        <p class="text-xs text-gray-400">2 รางวัลละ 4,000 บาท</p>
+                    </div>
+                    <div class="bg-gray-50 border border-gray-200 rounded p-4 text-center">
+                        <h5 class="text-xs font-bold text-gray-600 mb-1" id="lbl-2-digit">เลขท้าย 2 ตัว (2-Digit)</h5>
+                        <div class="text-2xl font-bold text-gray-800 font-mono tracking-widest my-1" id="res-thai-digit2">--</div>
+                        <p class="text-xs text-gray-400">1 รางวัลละ 2,000 บาท</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Saudi Results Layout (Hidden by default) -->
+            <div id="saudi-results-container" class="hidden">
+                <!-- Grand Prize -->
+                <div class="text-center bg-emerald-50 border border-emerald-200 rounded-lg p-6 mb-6">
+                    <h4 class="text-sm font-bold text-emerald-800 mb-2 uppercase tracking-wide" id="lbl-saudi-grand">Saudi Grand Jackpot Prize</h4>
+                    <div class="text-4xl md:text-5xl font-extrabold text-emerald-900 tracking-widest font-mono my-2" id="res-saudi-grand">
+                        --------
+                    </div>
+                    <p class="text-xs text-emerald-700" id="lbl-saudi-grand-val">Prize Value: 10,000,000 SAR</p>
+                </div>
+
+                <!-- Secondary Saudi Prizes Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-gray-50 border border-gray-200 rounded p-4 text-center">
+                        <h5 class="text-xs font-bold text-gray-600 mb-1" id="lbl-saudi-first">First Tier Prize (الجوائز الكبرى)</h5>
+                        <div class="text-xl font-bold text-gray-800 font-mono tracking-widest my-1" id="res-saudi-first">------ , ------</div>
+                        <p class="text-xs text-gray-400">500,000 SAR</p>
+                    </div>
+                    <div class="bg-gray-50 border border-gray-200 rounded p-4 text-center">
+                        <h5 class="text-xs font-bold text-gray-600 mb-1" id="lbl-saudi-serial">Lucky Series Match (سلسلة الحظ)</h5>
+                        <div class="text-xl font-bold text-gray-800 font-mono tracking-widest my-1" id="res-saudi-serial">----</div>
+                        <p class="text-xs text-gray-400">50,000 SAR</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glo-blue text-white py-8 px-4 mt-auto">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+            <div>
+                <h5 class="font-bold text-sm mb-2 text-yellow-400" id="footer-title">สำนักงานสลากกินแบ่งรัฐบาล & Saudi Lottery Administration</h5>
+                <p class="text-blue-200" id="footer-address">Official Multi-Country Government Lottery Portal 2026</p>
+                <p class="text-blue-200 mt-1">Support Helpline: +66 2528 9999 / +966 11 000 0000</p>
+            </div>
+            <div class="md:text-right flex flex-col justify-between">
+                <div>
+                    <p class="text-blue-200">&copy; 2026 International Lottery Bureau. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-sm overflow-hidden transform transition-all">
+            <div class="glo-blue text-white p-4 flex justify-between items-center">
+                <h3 class="font-bold text-base" id="modal-login-title">เข้าสู่ระบบระบบงาน</h3>
+                <button onclick="closeLoginModal()" class="text-gray-300 hover:text-white font-bold text-xl">&times;</button>
+            </div>
+            <form onsubmit="handleLogin(event)" class="p-6">
+                <div id="error-msg" class="hidden bg-red-100 border border-red-400 text-red-700 text-xs rounded p-2 mb-4">
+                    ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง!
+                </div>
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-gray-700 mb-1" id="lbl-username">ชื่อผู้ใช้งาน / Username</label>
+                    <input type="text" id="username" required placeholder="admin" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-800">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-xs font-bold text-gray-700 mb-1" id="lbl-password">รหัสผ่าน / Password</label>
+                    <input type="password" id="password" required placeholder="123456" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-800">
+                </div>
+                <button type="submit" class="w-full glo-blue text-white font-bold py-2 rounded text-sm hover:bg-blue-900 transition">
+                    <span id="btn-submit-login">เข้าสู่ระบบ</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script Section -->
+    <script>
+        // Active Country State ('thai' or 'saudi')
+        let currentCountry = 'thai';
+        let currentLang = 'TH';
+
+        // Multi-country Draw Database
+        const lotteryDatabase = {
+            thai: {
+                dates: [
+                    { value: "2026-10-16", labelTH: "16 ตุลาคม 2026", labelEN: "16 October 2026" },
+                    { value: "2026-10-01", labelTH: "1 ตุลาคม 2026", labelEN: "1 October 2026" },
+                    { value: "2026-09-16", labelTH: "16 กันยายน 2026", labelEN: "16 September 2026" }
+                ],
+                data: {
+                    "2026-10-16": { prize1: "951832", front3: ["241", "598"], back3: ["113", "762"], digit2: "54" },
+                    "2026-10-01": { prize1: "743285", front3: ["120", "349"], back3: ["672", "891"], digit2: "92" },
+                    "2026-09-16": { prize1: "619412", front3: ["035", "421"], back3: ["518", "904"], digit2: "17" }
+                }
+            },
+            saudi: {
+                dates: [
+                    { value: "2026-10-15", labelTH: "15 ตุลาคม 2026 (ซาอุฯ)", labelEN: "15 October 2026 (Saudi)" },
+                    { value: "2026-10-01", labelTH: "1 ตุลาคม 2026 (ซาอุฯ)", labelEN: "1 October 2026 (Saudi)" },
+                    { value: "2026-09-15", labelTH: "15 กันยายน 2026 (ซาอุฯ)", labelEN: "15 September 2026 (Saudi)" }
+                ],
+                data: {
+                    "2026-10-15": { grand: "84920173", first: ["492018", "920173"], serial: "7421" },
+                    "2026-10-01": { grand: "31849205", first: ["184920", "849205"], serial: "3912" },
+                    "2026-09-15": { grand: "62948102", first: ["294810", "948102"], serial: "8540" }
+                }
+            }
+        };
+
+        // Switch between Thai and Saudi systems
+        function switchLottery(country) {
+            currentCountry = country;
+            const tabThai = document.getElementById("tab-thai");
+            const tabSaudi = document.getElementById("tab-saudi");
+            const bannerBg = document.getElementById("banner-bg");
+
+            if (country === 'thai') {
+                tabThai.className = "px-4 py-2 text-sm font-bold rounded-lg glo-blue text-white shadow transition";
+                tabSaudi.className = "px-4 py-2 text-sm font-bold rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition";
+                bannerBg.className = "bg-gradient-to-r from-blue-900 to-indigo-900 rounded-lg p-6 text-white mb-8 shadow-md transition-all duration-300";
+                
+                document.getElementById("thai-results-container").classList.remove("hidden");
+                document.getElementById("saudi-results-container").classList.add("hidden");
+            } else {
+                tabSaudi.className = "px-4 py-2 text-sm font-bold rounded-lg saudi-green text-white shadow transition";
+                tabThai.className = "px-4 py-2 text-sm font-bold rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition";
+                bannerBg.className = "bg-gradient-to-r from-emerald-800 to-teal-900 rounded-lg p-6 text-white mb-8 shadow-md transition-all duration-300";
+                
+                document.getElementById("saudi-results-container").classList.remove("hidden");
+                document.getElementById("thai-results-container").classList.add("hidden");
+            }
+
+            populateDateDropdown();
+            renderResults();
+            updateTextContent();
+        }
+
+        // Populate Date Dropdown based on active country & language
+        function populateDateDropdown() {
+            const select = document.getElementById("draw-date-select");
+            select.innerHTML = "";
+            const countryObj = lotteryDatabase[currentCountry];
+            
+            countryObj.dates.forEach(d => {
+                const opt = document.createElement("option");
+                opt.value = d.value;
+                opt.innerText = currentLang === 'TH' ? d.labelTH : d.labelEN;
+                select.appendChild(opt);
+            });
+        }
+
+        // Render Lottery Results
+        function renderResults() {
+            const date = document.getElementById("draw-date-select").value;
+            const countryObj = lotteryDatabase[currentCountry];
+            const data = countryObj.data[date];
+
+            if (!data) return;
+
+            if (currentCountry === 'thai') {
+                document.getElementById("res-thai-1").innerText = data.prize1;
+                document.getElementById("res-thai-front3").innerText = data.front3.join(" , ");
+                document.getElementById("res-thai-back3").innerText = data.back3.join(" , ");
+                document.getElementById("res-thai-digit2").innerText = data.digit2;
+            } else {
+                document.getElementById("res-saudi-grand").innerText = data.grand;
+                document.getElementById("res-saudi-first").innerText = data.first.join(" , ");
+                document.getElementById("res-saudi-serial").innerText = data.serial;
+            }
+        }
+
+        // Modal Controls
+        function openLoginModal() {
+            document.getElementById("login-modal").classList.remove("hidden");
+        }
+
+        function closeLoginModal() {
+            document.getElementById("login-modal").classList.add("hidden");
+            document.getElementById("error-msg").classList.add("hidden");
+        }
+
+        // Login Handling
+        function handleLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById("username").value;
+            const p = document.getElementById("password").value;
+
+            if (u === "admin" && p === "123456") {
+                alert("เข้าสู่ระบบสำเร็จ! (Login Successful)");
+                closeLoginModal();
+            } else {
+                document.getElementById("error-msg").classList.remove("hidden");
+            }
+        }
+
+        // Toggle Language (TH <-> EN)
+        function toggleLanguage() {
+            currentLang = currentLang === 'TH' ? 'EN' : 'TH';
+            document.getElementById("current-lang").innerText = currentLang === 'TH' ? 'EN' : 'TH';
+            updateTextContent();
+            populateDateDropdown();
+            renderResults();
+        }
+
+        // Update Dynamic UI Text
+        function updateTextContent() {
+            if (currentLang === 'EN') {
+                document.getElementById("txt-official").innerText = "International Lottery Portal";
+                document.getElementById("txt-login-btn").innerText = "Log In";
+                document.getElementById("title-main").innerText = "International Lottery Bureau";
+                
+                if (currentCountry === 'thai') {
+                    document.getElementById("banner-title").innerText = "Check Thai GLO Lottery Results";
+                    document.getElementById("banner-desc").innerText = "Check official Thai government lottery draw results online.";
+                    document.getElementById("title-draw-results").innerText = "Official Thai GLO Draw Results";
+                } else {
+                    document.getElementById("banner-title").innerText = "Check Saudi Lottery Results";
+                    document.getElementById("banner-desc").innerText = "Check official Saudi lottery draw results online instantly.";
+                    document.getElementById("title-draw-results").innerText = "Official Saudi Lottery Draw Results";
+                }
+            } else {
+                document.getElementById("txt-official").innerText = "International Lottery Portal (GLO & Saudi)";
+                document.getElementById("txt-login-btn").innerText = "เข้าสู่ระบบ";
+                document.getElementById("title-main").innerText = "ระบบตรวจผลสลากนานาชาติ";
+                
+                if (currentCountry === 'thai') {
+                    document.getElementById("banner-title").innerText = "ตรวจผลรางวัลสลากกินแบ่งรัฐบาลไทย";
+                    document.getElementById("banner-desc").innerText = "ตรวจสอบผลการออกรางวัลสลากกินแบ่งรัฐบาลไทย งวดล่าสุด ได้ทางระบบออนไลน์";
+                    document.getElementById("title-draw-results").innerText = "ผลการออกรางวัลสลากกินแบ่งรัฐบาลไทย";
+                } else {
+                    document.getElementById("banner-title").innerText = "ตรวจผลรางวัลสลากซาอุดีอาระเบีย";
+                    document.getElementById("banner-desc").innerText = "ตรวจสอบผลการออกรางวัลสลากซาอุดีอาระเบีย งวดล่าสุด ได้ทางระบบออนไลน์";
+                    document.getElementById("title-draw-results").innerText = "ผลการออกรางวัลสลากซาอุดีอาระเบีย";
+                }
+            }
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            populateDateDropdown();
+            renderResults();
+        };
+    </script>
+</body>
+</html>
+```html
+<!DOCTYPE html>
+<html lang="th" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สำนักงานสลากกินแบ่งรัฐบาล | The Government Lottery Office (GLO)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font: Sarabun (Official Standard Thai Font) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        glo: {
+                            navy: '#00264d',
+                            blue: '#0a4275',
+                            accent: '#0066cc',
+                            gold: '#d4af37',
+                            goldlight: '#f9f3d9',
+                            goldhover: '#b59223',
+                            bglight: '#f4f7fa'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Sarabun', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+        }
+        .hero-slide {
+            display: none;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .hero-slide.active {
+            display: flex;
+            opacity: 1;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen text-slate-800 bg-slate-50 antialiased selection:bg-glo-accent selection:text-white">
+
+    <!-- Top Utility Bar -->
+    <div class="bg-glo-navy text-white text-xs sm:text-sm py-2 px-4 border-b border-glo-gold/30">
+        <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+            <div class="flex items-center space-x-4">
+                <span class="flex items-center"><i class="fa-solid fa-building-columns mr-1.5 text-glo-gold"></i> <span data-i18n="gov_portal">เว็บไซต์อย่างเป็นทางการของรัฐบาลไทย</span></span>
+                <span class="hidden md:inline-block text-slate-400">|</span>
+                <span class="hidden md:flex items-center"><i class="fa-solid fa-phone mr-1.5 text-glo-gold"></i> GLO Call Center: 0 2528 9999</span>
+            </div>
+            <div class="flex items-center space-x-4 ml-auto">
+                <div class="flex items-center space-x-1 bg-glo-blue/80 px-2 py-0.5 rounded text-xs border border-glo-gold/20">
+                    <button id="lang-th" onclick="setLanguage('th')" class="px-2 py-0.5 rounded font-bold bg-glo-gold text-glo-navy">TH</button>
+                    <button id="lang-en" onclick="setLanguage('en')" class="px-2 py-0.5 rounded text-slate-200 hover:text-white">EN</button>
+                </div>
+                <button onclick="openModal('loginModal')" class="hover:text-glo-gold transition flex items-center gap-1 font-medium">
+                    <i class="fa-regular fa-user"></i> <span data-i18n="login">เข้าสู่ระบบ</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Official Header -->
+    <header class="bg-white shadow-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 py-3 sm:py-4 flex items-center justify-between">
+            
+            <!-- Logo & Brand Header -->
+            <a href="#" class="flex items-center gap-3">
+                <!-- Official Emblem Style Design -->
+                <div class="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-glo-blue to-glo-navy rounded-full p-1 shadow-md flex items-center justify-center border-2 border-glo-gold shrink-0">
+                    <svg viewBox="0 0 100 100" class="w-full h-full text-glo-gold fill-current">
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="3"/>
+                        <circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3"/>
+                        <path d="M 50 15 L 58 35 L 80 35 L 62 48 L 68 70 L 50 56 L 32 70 L 38 48 L 20 35 L 42 35 Z" fill="currentColor" opacity="0.9"/>
+                        <circle cx="50" cy="50" r="12" class="fill-glo-navy"/>
+                        <path d="M47 43 L53 43 L55 57 L45 57 Z" fill="currentColor"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-glo-navy text-base sm:text-xl lg:text-2xl leading-tight" data-i18n="site_title">
+                        สำนักงานสลากกินแบ่งรัฐบาล
+                    </h1>
+                    <p class="text-xs sm:text-sm font-semibold text-slate-500 uppercase tracking-wider" data-i18n="site_subtitle">
+                        The Government Lottery Office
+                    </p>
+                </div>
+            </a>
+
+            <!-- Search Bar (Desktop) -->
+            <div class="hidden lg:flex items-center gap-3">
+                <div class="relative">
+                    <input type="text" id="headerSearchInput" placeholder="ค้นหาข้อมูล, ประกาศ..." data-i18n-ph="search_ph" class="w-64 pl-9 pr-4 py-2 border border-slate-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-glo-blue/40">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-sm"></i>
+                </div>
+                <button onclick="handleSearch()" class="bg-glo-blue hover:bg-glo-navy text-white text-sm px-5 py-2 rounded-full transition shadow-sm font-medium">
+                    <span data-i18n="search">ค้นหา</span>
+                </button>
+            </div>
+
+            <!-- Mobile Drawer Button -->
+            <button onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-lg text-glo-navy hover:bg-slate-100 focus:outline-none">
+                <i class="fa-solid fa-bars text-2xl"></i>
+            </button>
+        </div>
+
+        <!-- Desktop Main Menu Navigation -->
+        <nav class="bg-glo-blue text-white shadow-inner hidden lg:block border-t border-glo-gold/20">
+            <div class="max-w-7xl mx-auto px-4 flex justify-between items-center font-medium text-sm">
+                <ul class="flex items-center space-x-1">
+                    <li><a href="#" class="px-4 py-3 hover:bg-glo-navy flex items-center gap-1.5 transition border-b-2 border-glo-gold bg-glo-navy"><i class="fa-solid fa-house"></i> <span data-i18n="nav_home">หน้าแรก</span></a></li>
+                    <li><a href="#about" class="px-4 py-3 hover:bg-glo-navy flex items-center gap-1 transition border-b-2 border-transparent hover:border-glo-gold"><span data-i18n="nav_about">เกี่ยวกับเรา</span></a></li>
+                    <li><a href="#services" class="px-4 py-3 hover:bg-glo-navy flex items-center gap-1 transition border-b-2 border-transparent hover:border-glo-gold"><span data-i18n="nav_products">ผลิตภัณฑ์และบริการ</span></a></li>
+                    <li><a href="#news" class="px-4 py-3 hover:bg-glo-navy flex items-center gap-1 transition border-b-2 border-transparent hover:border-glo-gold"><span data-i18n="nav_news">ข่าวสารและประกาศ</span></a></li>
+                    <li><a href="#procurement" class="px-4 py-3 hover:bg-glo-navy flex items-center gap-1 transition border-b-2 border-transparent hover:border-glo-gold"><span data-i18n="nav_procurement">จัดซื้อจัดจ้าง</span></a></li>
+                    <li><a href="#contact" class="px-4 py-3 hover:bg-glo-navy flex items-center gap-1 transition border-b-2 border-transparent hover:border-glo-gold"><span data-i18n="nav_contact">ติดต่อเรา</span></a></li>
+                </ul>
+                <div class="py-2">
+                    <button onclick="openModal('verifyGuideModal')" class="bg-glo-gold hover:bg-glo-goldhover text-glo-navy font-bold px-3.5 py-1.5 rounded text-xs flex items-center gap-1.5 shadow-sm transition">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span data-i18n="verify_btn">คู่มือตรวจสอบสลาก</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Mobile Drawer Navigation -->
+    <div id="mobileMenu" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden transition-opacity">
+        <div class="bg-white w-4/5 max-w-xs h-full shadow-2xl flex flex-col justify-between">
+            <div>
+                <div class="p-4 bg-glo-navy text-white flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-building-columns text-glo-gold"></i>
+                        <span class="font-bold text-sm" data-i18n="site_title">สำนักงานสลากกินแบ่งรัฐบาล</span>
+                    </div>
+                    <button onclick="toggleMobileMenu()" class="text-white hover:text-glo-gold text-lg"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="p-4">
+                    <div class="relative mb-4">
+                        <input type="text" placeholder="ค้นหา..." data-i18n-ph="search_ph" class="w-full pl-9 pr-3 py-2 border rounded-lg text-sm">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
+                    </div>
+                    <ul class="space-y-1 font-medium text-slate-700">
+                        <li><a href="#" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-md hover:bg-slate-100 text-glo-accent font-semibold" data-i18n="nav_home">หน้าแรก</a></li>
+                        <li><a href="#about" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-md hover:bg-slate-100" data-i18n="nav_about">เกี่ยวกับเรา</a></li>
+                        <li><a href="#services" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-md hover:bg-slate-100" data-i18n="nav_products">ผลิตภัณฑ์และบริการ</a></li>
+                        <li><a href="#news" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-md hover:bg-slate-100" data-i18n="nav_news">ข่าวสารและประกาศ</a></li>
+                        <li><a href="#procurement" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-md hover:bg-slate-100" data-i18n="nav_procurement">จัดซื้อจัดจ้าง</a></li>
+                        <li><a href="#contact" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-md hover:bg-slate-100" data-i18n="nav_contact">ติดต่อเรา</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="p-4 bg-slate-50 border-t border-slate-200 text-xs text-slate-600">
+                <p class="font-semibold text-glo-navy mb-1">GLO Call Center</p>
+                <p><i class="fa-solid fa-phone text-glo-accent mr-1"></i> 0 2528 9999</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Body -->
+    <main class="flex-grow">
+        
+        <!-- Official Banner Hero Section -->
+        <section class="relative bg-slate-900 overflow-hidden">
+            <div id="carouselSlides" class="relative min-h-[340px] sm:min-h-[420px] md:min-h-[460px]">
+                
+                <!-- Hero Banner Slide 1 -->
+                <div class="hero-slide active absolute inset-0 bg-gradient-to-r from-glo-navy via-glo-blue to-slate-900 text-white items-center">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full grid md:grid-cols-2 gap-8 items-center">
+                        <div class="space-y-4">
+                            <span class="inline-block bg-glo-gold text-glo-navy font-bold text-xs uppercase px-3 py-1 rounded-full shadow-sm" data-i18n="slide1_tag">
+                                นโยบายและพันธกิจองค์กร
+                            </span>
+                            <h2 class="text-2xl sm:text-4xl font-extrabold text-white leading-tight" data-i18n="slide1_title">
+                                สลากกินแบ่งรัฐบาลเพื่อสังคม มุ่งมั่นพัฒนาอย่างยั่งยืน
+                            </h2>
+                            <p class="text-slate-200 text-sm sm:text-base leading-relaxed" data-i18n="slide1_desc">
+                                สำนักงานสลากกินแบ่งรัฐบาล มุ่งมั่นนำรายได้ส่งต่อการพัฒนาประเทศ การศึกษา สุขอนามัย และการช่วยเหลือสังคมในทุกภาคส่วน
+                            </p>
+                            <div class="pt-2 flex flex-wrap gap-3">
+                                <a href="#about" class="bg-glo-gold hover:bg-glo-goldhover text-glo-navy font-bold px-5 py-2.5 rounded-lg text-sm transition shadow-lg inline-flex items-center gap-2">
+                                    <span data-i18n="learn_more">อ่านเพิ่มเติม</span> <i class="fa-solid fa-arrow-right text-xs"></i>
+                                </a>
+                                <button onclick="openModal('csrModal')" class="bg-white/10 hover:bg-white/20 text-white font-medium px-5 py-2.5 rounded-lg text-sm transition border border-white/30 backdrop-blur-sm">
+                                    <span data-i18n="csr_activities">กิจกรรมเพื่อสังคม (CSR)</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="hidden md:flex justify-center items-center">
+                            <div class="w-80 h-72 rounded-2xl bg-gradient-to-tr from-glo-gold/20 to-glo-blue/40 border border-white/20 p-6 flex flex-col justify-between shadow-2xl relative backdrop-blur-md">
+                                <div class="flex justify-between items-start">
+                                    <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center border border-glo-gold/50">
+                                        <i class="fa-solid fa-hands-holding-child text-2xl text-glo-gold"></i>
+                                    </div>
+                                    <span class="text-xs text-glo-gold font-mono uppercase">Official GLO</span>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-300 font-semibold mb-1" data-i18n="csr_highlight">การแบ่งปันคืนสู่สังคม</p>
+                                    <p class="text-lg font-bold text-white" data-i18n="csr_quote">"สร้างโอกาส สร้างอนาคต เพื่อคนไทยทุกคน"</p>
+                                </div>
+                                <div class="pt-4 border-t border-white/10 flex justify-between items-center text-xs text-slate-300">
+                                    <span>Government Support</span>
+                                    <i class="fa-solid fa-check-circle text-green-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Banner Slide 2 -->
+                <div class="hero-slide absolute inset-0 bg-gradient-to-r from-blue-900 via-indigo-950 to-glo-navy text-white items-center">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full grid md:grid-cols-2 gap-8 items-center">
+                        <div class="space-y-4">
+                            <span class="inline-block bg-blue-500 text-white font-bold text-xs uppercase px-3 py-1 rounded-full shadow-sm" data-i18n="slide2_tag">
+                                บริการดิจิทัลทันสมัย
+                            </span>
+                            <h2 class="text-2xl sm:text-4xl font-extrabold text-white leading-tight" data-i18n="slide2_title">
+                                ช่องทางสลากดิจิทัล สะดวก ปลอดภัย ซื้อตรงราคา 80 บาท
+                            </h2>
+                            <p class="text-slate-200 text-sm sm:text-base leading-relaxed" data-i18n="slide2_desc">
+                                ตรวจสอบแนวทางการซื้อและขึ้นเงินรางวัลผ่านแอปพลิเคชันทางการ ป้องกันการปลอมแปลงและรักษาสิทธิ์ของประชาชน
+                            </p>
+                            <div class="pt-2 flex flex-wrap gap-3">
+                                <button onclick="openModal('digitalInfoModal')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2.5 rounded-lg text-sm transition shadow-lg inline-flex items-center gap-2">
+                                    <i class="fa-solid fa-mobile-screen-button"></i> <span data-i18n="app_info">รายละเอียดบริการ</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="hidden md:flex justify-center items-center">
+                            <div class="relative w-64 h-72 bg-slate-800 rounded-3xl border-4 border-slate-700 p-4 shadow-2xl flex flex-col justify-between">
+                                <div class="w-20 h-4 bg-slate-700 mx-auto rounded-full mb-2"></div>
+                                <div class="bg-glo-navy rounded-xl p-4 text-center border border-glo-gold/30 my-auto">
+                                    <i class="fa-solid fa-qrcode text-5xl text-glo-gold mb-3"></i>
+                                    <p class="text-xs text-white font-semibold" data-i18n="digital_app_name">แอปพลิเคชันอย่างเป็นทางการ</p>
+                                    <p class="text-[10px] text-slate-300 mt-1">Official Digital Platform</p>
+                                </div>
+                                <div class="text-center text-[11px] text-slate-400">Government Digital Service</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Carousel Indicators -->
+            <div class="absolute bottom-4 left-0 right-0 z-20 flex justify-center space-x-2">
+                <button onclick="setSlide(0)" class="slide-dot w-3 h-3 rounded-full bg-glo-gold transition-all duration-300"></button>
+                <button onclick="setSlide(1)" class="slide-dot w-3 h-3 rounded-full bg-white/40 hover:bg-white transition-all duration-300"></button>
+            </div>
+        </section>
+
+        <!-- Official Service Quick Tools Portal -->
+        <section class="bg-white border-b border-slate-200 shadow-sm relative z-10 -mt-4 max-w-6xl mx-auto rounded-xl p-4 sm:p-6 mb-12">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-slate-100 pb-4 mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-glo-goldlight flex items-center justify-center text-glo-navy font-bold text-lg">
+                        <i class="fa-solid fa-file-contract"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-glo-navy text-base sm:text-lg" data-i18n="portal_services_title">ศูนย์บริการข้อมูลข่าวสาร และการตรวจสอบสลาก</h3>
+                        <p class="text-xs text-slate-500" data-i18n="portal_services_subtitle">ค้นหาคำแนะนำ ระเบียบการ และวิธีสังเกตสลากกินแบ่งรัฐบาลของแท้</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-4">
+                <div class="md:col-span-2 relative">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1" data-i18n="search_guidelines_label">ค้นหารายละเอียดสลาก หรือ หัวข้อสอบถามเพิ่มเติม</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="guidanceSearchInput" placeholder="พิมพ์ข้อความ เช่น 'การขึ้นเงินรางวัล', 'วิธีดูสลากจริง'..." data-i18n-ph="guidance_ph" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-glo-blue/40 focus:outline-none">
+                        <button onclick="searchGuidance()" class="bg-glo-navy hover:bg-glo-blue text-white font-medium px-5 py-2.5 rounded-lg text-sm transition shrink-0 flex items-center gap-1.5">
+                            <i class="fa-solid fa-magnifying-glass"></i> <span data-i18n="search_btn">ค้นหา</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="flex items-end">
+                    <button onclick="openModal('verifyGuideModal')" class="w-full bg-slate-100 hover:bg-slate-200 text-glo-navy font-semibold py-2.5 px-4 rounded-lg text-sm border border-slate-200 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-shield-circle-check text-glo-accent"></i>
+                        <span data-i18n="verify_feature">การตรวจสอบสลากกินแบ่ง</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="guidanceResult" class="hidden mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-900">
+                <i class="fa-solid fa-circle-info mr-1"></i> <span id="guidanceResultText"></span>
+            </div>
+        </section>
+
+        <!-- News & Activity Categories Grid -->
+        <section id="news" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 pb-3 border-b-2 border-glo-navy">
+                <div>
+                    <h2 class="text-2xl font-bold text-glo-navy flex items-center gap-2">
+                        <i class="fa-solid fa-newspaper text-glo-gold"></i>
+                        <span data-i18n="section_news_title">ข่าวสารและกิจกรรมสำนักงาน</span>
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-1" data-i18n="section_news_sub">ติดตามข่าวประชาสัมพันธ์ กิจกรรม CSR และประกาศจัดซื้อจัดจ้าง</p>
+                </div>
+                
+                <!-- Category Filtering Buttons -->
+                <div class="flex flex-wrap gap-2 mt-4 md:mt-0 text-xs font-semibold">
+                    <button onclick="filterNews('all')" class="news-tab-btn active bg-glo-navy text-white px-3 py-1.5 rounded-full transition">ทั้งหมด</button>
+                    <button onclick="filterNews('press')" class="news-tab-btn bg-slate-200 text-slate-700 hover:bg-slate-300 px-3 py-1.5 rounded-full transition" data-i18n="tab_press">ข่าวประชาสัมพันธ์</button>
+                    <button onclick="filterNews('csr')" class="news-tab-btn bg-slate-200 text-slate-700 hover:bg-slate-300 px-3 py-1.5 rounded-full transition" data-i18n="tab_csr">กิจกรรม GLO</button>
+                    <button onclick="filterNews('procurement')" class="news-tab-btn bg-slate-200 text-slate-700 hover:bg-slate-300 px-3 py-1.5 rounded-full transition" data-i18n="tab_procurement">ประกาศจัดซื้อจัดจ้าง</button>
+                </div>
+            </div>
+
+            <!-- News Grid -->
+            <div class="grid md:grid-cols-3 gap-6" id="newsGrid">
+                
+                <!-- News Card 1 -->
+                <div class="news-card press bg-white rounded-xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col">
+                    <div class="bg-glo-navy/5 p-4 border-b border-slate-100 flex justify-between items-center">
+                        <span class="bg-glo-blue text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full" data-i18n="badge_press">ข่าวประชาสัมพันธ์</span>
+                        <span class="text-xs text-slate-400 font-mono"><i class="fa-regular fa-calendar mr-1"></i> 15 ต.ค. 2026</span>
+                    </div>
+                    <div class="p-5 flex-grow flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-glo-navy text-base mb-2 line-clamp-2 hover:text-glo-accent cursor-pointer" onclick="openModal('newsModal1')" data-i18n="news1_title">
+                                สำนักงานสลากกินแบ่งรัฐบาล มุ่งมั่นยกระดับองค์กรสู่ความยั่งยืนด้วยนวัตกรรมดิจิทัล
+                            </h3>
+                            <p class="text-xs text-slate-600 line-clamp-3 leading-relaxed mb-4" data-i18n="news1_desc">
+                                พัฒนาระบบการให้บริการเพื่อประชาชนอย่างครอบคลุม ยึดมั่นในความโปร่งใสและหลักธรรมาภิบาลระดับสากล
+                            </p>
+                        </div>
+                        <button onclick="openModal('newsModal1')" class="text-glo-accent font-semibold text-xs flex items-center gap-1 hover:underline pt-2 border-t border-slate-100">
+                            <span data-i18n="read_more">อ่านรายละเอียด</span> <i class="fa-solid fa-angle-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- News Card 2 -->
+                <div class="news-card csr bg-white rounded-xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col">
+                    <div class="bg-glo-navy/5 p-4 border-b border-slate-100 flex justify-between items-center">
+                        <span class="bg-emerald-600 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full" data-i18n="badge_csr">กิจกรรม GLO</span>
+                        <span class="text-xs text-slate-400 font-mono"><i class="fa-regular fa-calendar mr-1"></i> 10 ต.ค. 2026</span>
+                    </div>
+                    <div class="p-5 flex-grow flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-glo-navy text-base mb-2 line-clamp-2 hover:text-glo-accent cursor-pointer" onclick="openModal('csrModal')" data-i18n="news2_title">
+                                โครงการ GLO ส่งเสริมการศึกษาและมอบทุนการศึกษาให้แก่เยาวชนในพื้นที่ห่างไกล
+                            </h3>
+                            <p class="text-xs text-slate-600 line-clamp-3 leading-relaxed mb-4" data-i18n="news2_desc">
+                                เดินหน้าสนับสนุนอนาคตของชาติ มอบโอกาสทางการศึกษาแก่โรงเรียนและนักเรียนที่ขาดแคลนทุนทรัพย์
+                            </p>
+                        </div>
+                        <button onclick="openModal('csrModal')" class="text-glo-accent font-semibold text-xs flex items-center gap-1 hover:underline pt-2 border-t border-slate-100">
+                            <span data-i18n="read_more">อ่านรายละเอียด</span> <i class="fa-solid fa-angle-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- News Card 3 -->
+                <div class="news-card procurement bg-white rounded-xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col">
+                    <div class="bg-glo-navy/5 p-4 border-b border-slate-100 flex justify-between items-center">
+                        <span class="bg-amber-600 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full" data-i18n="badge_procurement">จัดซื้อจัดจ้าง</span>
+                        <span class="text-xs text-slate-400 font-mono"><i class="fa-regular fa-calendar mr-1"></i> 02 ต.ค. 2026</span>
+                    </div>
+                    <div class="p-5 flex-grow flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-glo-navy text-base mb-2 line-clamp-2 hover:text-glo-accent cursor-pointer" onclick="openModal('procurementModal')" data-i18n="news3_title">
+                                ประกาศประกวดราคาจัดซื้ออุปกรณ์เทคโนโลยีสารสนเทศ ประจำปีงบประมาณ 2027
+                            </h3>
+                            <p class="text-xs text-slate-600 line-clamp-3 leading-relaxed mb-4" data-i18n="news3_desc">
+                                รายละเอียดและข้อกำหนดทางเทคนิค (TOR) สำหรับผู้ประกอบการที่สนใจเข้าร่วมการเสนอราคา
+                            </p>
+                        </div>
+                        <button onclick="openModal('procurementModal')" class="text-glo-accent font-semibold text-xs flex items-center gap-1 hover:underline pt-2 border-t border-slate-100">
+                            <span data-i18n="read_more">อ่านรายละเอียด</span> <i class="fa-solid fa-angle-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Information & Public Service Modules -->
+        <section id="services" class="bg-glo-bglight py-12 my-8 border-t border-b border-slate-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-10">
+                    <h2 class="text-2xl font-bold text-glo-navy" data-i18n="guidelines_heading">ข้อควรรู้และบริการสำหรับประชาชน</h2>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-2" data-i18n="guidelines_sub">แนวทางปฏิบัติ การติดต่อขึ้นเงินรางวัล และขั้นตอนทางกฎหมายอย่างถูกวิธี</p>
+                </div>
+
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-center hover:border-glo-gold transition">
+                        <div class="w-12 h-12 rounded-full bg-glo-goldlight text-glo-navy mx-auto flex items-center justify-center text-xl font-bold mb-4">
+                            <i class="fa-solid fa-money-bill-transfer"></i>
+                        </div>
+                        <h4 class="font-bold text-glo-navy text-sm mb-2" data-i18n="guide1_t">ขั้นตอนการขึ้นเงินรางวัล</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed mb-4" data-i18n="guide1_d">เอกสารที่ต้องใช้ สถานที่ให้บริการ และเงื่อนไขการหักค่าธรรมเนียมตามกฎหมาย</p>
+                        <button onclick="openModal('verifyGuideModal')" class="text-glo-accent font-semibold text-xs hover:underline" data-i18n="learn_more">อ่านเพิ่มเติม</button>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-center hover:border-glo-gold transition">
+                        <div class="w-12 h-12 rounded-full bg-glo-goldlight text-glo-navy mx-auto flex items-center justify-center text-xl font-bold mb-4">
+                            <i class="fa-solid fa-shield-heart"></i>
+                        </div>
+                        <h4 class="font-bold text-glo-navy text-sm mb-2" data-i18n="guide2_t">ข้อสังเกตสลากจริง</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed mb-4" data-i18n="guide2_d">จุดสังเกตเนื้อกระดาษ ลายน้ำ รหัสบาร์โค้ด และการพิมพ์ป้องกันการปลอมแปลง</p>
+                        <button onclick="openModal('verifyGuideModal')" class="text-glo-accent font-semibold text-xs hover:underline" data-i18n="learn_more">อ่านเพิ่มเติม</button>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-center hover:border-glo-gold transition">
+                        <div class="w-12 h-12 rounded-full bg-glo-goldlight text-glo-navy mx-auto flex items-center justify-center text-xl font-bold mb-4">
+                            <i class="fa-solid fa-scale-balanced"></i>
+                        </div>
+                        <h4 class="font-bold text-glo-navy text-sm mb-2" data-i18n="guide3_t">กฎหมายและระเบียบข้อบังคับ</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed mb-4" data-i18n="guide3_d">พระราชบัญญัติสำนักงานสลากกินแบ่งรัฐบาล และข้อบังคับเกี่ยวกับการจำหน่าย</p>
+                        <button onclick="openModal('verifyGuideModal')" class="text-glo-accent font-semibold text-xs hover:underline" data-i18n="learn_more">อ่านเพิ่มเติม</button>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-center hover:border-glo-gold transition">
+                        <div class="w-12 h-12 rounded-full bg-glo-goldlight text-glo-navy mx-auto flex items-center justify-center text-xl font-bold mb-4">
+                            <i class="fa-solid fa-headset"></i>
+                        </div>
+                        <h4 class="font-bold text-glo-navy text-sm mb-2" data-i18n="guide4_t">ร้องเรียน / แจ้งเบาะแส</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed mb-4" data-i18n="guide4_d">ช่องทางการแจ้งเบาะแสการจำหน่ายเกินราคา หรือพฤติกรรมผิดระเบียบ</p>
+                        <button onclick="openModal('verifyGuideModal')" class="text-glo-accent font-semibold text-xs hover:underline" data-i18n="learn_more">อ่านเพิ่มเติม</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-glo-navy text-white pt-12 pb-6 border-t-4 border-glo-gold">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 pb-8 border-b border-slate-700/80 text-xs sm:text-sm">
+                
+                <!-- Col 1 -->
+                <div class="space-y-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-glo-gold flex items-center justify-center text-glo-navy font-bold">
+                            <i class="fa-solid fa-building-columns text-sm"></i>
+                        </div>
+                        <span class="font-bold text-base text-glo-gold" data-i18n="site_title">สำนักงานสลากกินแบ่งรัฐบาล</span>
+                    </div>
+                    <p class="text-slate-300 text-xs leading-relaxed" data-i18n="footer_about">
+                        องค์กรชั้นนำที่บริหารจัดการการออกสลากด้วยมาตรฐานสากล โปร่งใส คืนรายได้สู่สังคมเพื่อการพัฒนาประเทศอย่างยั่งยืน
+                    </p>
+                </div>
+
+                <!-- Col 2 -->
+                <div>
+                    <h4 class="font-bold text-white text-sm mb-3 border-b border-glo-gold/40 pb-1" data-i18n="footer_address_t">สถานที่ติดต่อ</h4>
+                    <address class="not-italic text-slate-300 text-xs space-y-2 leading-relaxed">
+                        <p><i class="fa-solid fa-location-dot text-glo-gold mr-1.5"></i> <span data-i18n="footer_address">359 ถนนนนทบุรี ตำบลท่าทราย อำเภอเมืองนนทบุรี จังหวัดนนทบุรี 11000</span></p>
+                        <p><i class="fa-solid fa-phone text-glo-gold mr-1.5"></i> Call Center: 0 2528 9999</p>
+                        <p><i class="fa-solid fa-envelope text-glo-gold mr-1.5"></i> contact@glo.or.th</p>
+                    </address>
+                </div>
+
+                <!-- Col 3 -->
+                <div>
+                    <h4 class="font-bold text-white text-sm mb-3 border-b border-glo-gold/40 pb-1" data-i18n="footer_links_t">ลิงก์ที่เป็นประโยชน์</h4>
+                    <ul class="text-xs text-slate-300 space-y-2">
+                        <li><a href="#about" class="hover:text-glo-gold transition"><i class="fa-solid fa-chevron-right text-[9px] mr-1"></i> <span data-i18n="nav_about">เกี่ยวกับเรา</span></a></li>
+                        <li><a href="#services" class="hover:text-glo-gold transition"><i class="fa-solid fa-chevron-right text-[9px] mr-1"></i> <span data-i18n="nav_products">ผลิตภัณฑ์และบริการ</span></a></li>
+                        <li><a href="#procurement" class="hover:text-glo-gold transition"><i class="fa-solid fa-chevron-right text-[9px] mr-1"></i> <span data-i18n="nav_procurement">จัดซื้อจัดจ้าง</span></a></li>
+                        <li><a href="javascript:void(0)" class="hover:text-glo-gold transition"><i class="fa-solid fa-chevron-right text-[9px] mr-1"></i> <span data-i18n="privacy_policy">นโยบายความเป็นส่วนตัว</span></a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 4 -->
+                <div>
+                    <h4 class="font-bold text-white text-sm mb-3 border-b border-glo-gold/40 pb-1" data-i18n="footer_follow">ติดตามข่าวสาร</h4>
+                    <div class="flex space-x-3 mb-4">
+                        <a href="#" class="w-8 h-8 rounded bg-glo-blue hover:bg-glo-gold hover:text-glo-navy flex items-center justify-center transition"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="w-8 h-8 rounded bg-glo-blue hover:bg-glo-gold hover:text-glo-navy flex items-center justify-center transition"><i class="fa-brands fa-line"></i></a>
+                        <a href="#" class="w-8 h-8 rounded bg-glo-blue hover:bg-glo-gold hover:text-glo-navy flex items-center justify-center transition"><i class="fa-brands fa-youtube"></i></a>
+                    </div>
+                    <p class="text-[11px] text-slate-400" data-i18n="footer_hours">เวลาทำการ: จันทร์ - ศุกร์ 08.30 - 16.30 น. (เว้นวันหยุดราชการ)</p>
+                </div>
+
+            </div>
+
+            <!-- Copyright -->
+            <div class="pt-6 text-center text-xs text-slate-400 flex flex-col sm:flex-row justify-between items-center gap-2">
+                <p data-i18n="copyright">© 2026 สำนักงานสลากกินแบ่งรัฐบาล (The Government Lottery Office). สงวนลิขสิทธิ์ทั้งหมด.</p>
+                <p class="text-[11px] text-slate-500">Government Portal Design Standard</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Modals -->
+    <div id="modalBackdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden transition-opacity flex items-center justify-center p-4">
+        
+        <!-- News Modal 1 -->
+        <div id="newsModal1" class="modal-box bg-white rounded-xl shadow-2xl max-w-lg w-full overflow-hidden hidden">
+            <div class="bg-glo-navy text-white p-4 flex justify-between items-center">
+                <h3 class="font-bold text-sm" data-i18n="badge_press">ข่าวประชาสัมพันธ์</h3>
+                <button onclick="closeModal('newsModal1')" class="text-slate-300 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="p-6 space-y-3 max-h-[70vh] overflow-y-auto custom-scrollbar text-sm">
+                <h4 class="font-bold text-glo-navy text-base" data-i18n="news1_title">สำนักงานสลากกินแบ่งรัฐบาล มุ่งมั่นยกระดับองค์กรสู่ความยั่งยืนด้วยนวัตกรรมดิจิทัล</h4>
+                <p class="text-xs text-slate-400"><i class="fa-regular fa-calendar mr-1"></i> 15 ตุลาคม 2026</p>
+                <p class="text-slate-600 leading-relaxed text-xs sm:text-sm">
+                    สำนักงานสลากกินแบ่งรัฐบาล (GLO) ดำเนินนโยบายเพื่อมุ่งเน้นความโปร่งใส ความซื่อสัตย์ และความคุ้มค่าในการบริหารจัดการ มุ่งเน้นการใช้เทคโนโลยีสมัยใหม่ในการอำนวยความสะดวกแก่ประชาชน และสร้างระบบนิเวศทางดิจิทัลที่ปลอดภัย
+                </p>
+            </div>
+            <div class="p-4 bg-slate-50 border-t text-right">
+                <button onclick="closeModal('newsModal1')" class="bg-glo-blue text-white px-4 py-1.5 rounded-md text-xs font-semibold">ปิดหน้าต่าง</button>
+            </div>
+        </div>
+
+        <!-- CSR Modal -->
+        <div id="csrModal" class="modal-box bg-white rounded-xl shadow-2xl max-w-lg w-full overflow-hidden hidden">
+            <div class="bg-emerald-700 text-white p-4 flex justify-between items-center">
+                <h3 class="font-bold text-sm" data-i18n="badge_csr">กิจกรรม GLO เพื่อสังคม</h3>
+                <button onclick="closeModal('csrModal')" class="text-slate-300 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="p-6 space-y-3 max-h-[70vh] overflow-y-auto custom-scrollbar text-sm">
+                <h4 class="font-bold text-glo-navy text-base" data-i18n="news2_title">โครงการ GLO ส่งเสริมการศึกษาและมอบทุนการศึกษาให้แก่เยาวชนในพื้นที่ห่างไกล</h4>
+                <p class="text-xs text-slate-400"><i class="fa-regular fa-calendar mr-1"></i> 10 ตุลาคม 2026</p>
+                <p class="text-slate-600 leading-relaxed text-xs sm:text-sm">
+                    โครงการมอบทุนการศึกษาพัฒนาชุมชน เป็นหนึ่งในภารกิจหลักที่สำนักงานสลากกินแบ่งรัฐบาลให้ความสำคัญอย่างต่อเนื่อง เพื่อกระจายโอกาสทางการศึกษาและพัฒนาคุณภาพชีวิตของประชาชนไทยทั่วประเทศ
+                </p>
+            </div>
+            <div class="p-4 bg-slate-50 border-t text-right">
+                <button onclick="closeModal('csrModal')" class="bg-emerald-700 text-white px-4 py-1.5 rounded-md text-xs font-semibold">ปิดหน้าต่าง</button>
+            </div>
+        </div>
+
+        <!-- Procurement Modal -->
+        <div id="procurementModal" class="modal-box bg-white rounded-xl shadow-2xl max-w-lg w-full overflow-hidden hidden">
+            <div class="bg-amber-700 text-white p-4 flex justify-between items-center">
+                <h3 class="font-bold text-sm" data-i18n="badge_procurement">จัดซื้อจัดจ้าง</h3>
+                <button onclick="closeModal('procurementModal')" class="text-slate-300 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="p-6 space-y-3 max-h-[70vh] overflow-y-auto custom-scrollbar text-sm">
+                <h4 class="font-bold text-glo-navy text-base" data-i18n="news3_title">ประกาศประกวดราคาจัดซื้ออุปกรณ์เทคโนโลยีสารสนเทศ ประจำปีงบประมาณ 2027</h4>
+                <p class="text-xs text-slate-400"><i class="fa-regular fa-calendar mr-1"></i> 02 ตุลาคม 2026</p>
+                <p class="text-slate-600 leading-relaxed text-xs sm:text-sm">
+                    ผู้ประกอบการที่สนใจสามารถดาวน์โหลดเอกสารข้อกำหนดคุณลักษณะ (TOR) และยื่นซองข้อเสนอผ่านระบบจัดซื้อจัดจ้างภาครัฐตามวันและเวลาที่กำหนด
+                </p>
+            </div>
+            <div class="p-4 bg-slate-50 border-t text-right">
+                <button onclick="closeModal('procurementModal')" class="bg-amber-700 text-white px-4 py-1.5 rounded-md text-xs font-semibold">ปิดหน้าต่าง</button>
+            </div>
+        </div>
+
+        <!-- Digital Info Modal -->
+        <div id="digitalInfoModal" class="modal-box bg-white rounded-xl shadow-2xl max-w-lg w-full overflow-hidden hidden">
+            <div class="bg-blue-800 text-white p-4 flex justify-between items-center">
+                <h3 class="font-bold text-sm" data-i18n="app_info">รายละเอียดบริการสลากดิจิทัล</h3>
+                <button onclick="closeModal('digitalInfoModal')" class="text-slate-300 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="p-6 space-y-3 max-h-[70vh] overflow-y-auto custom-scrollbar text-sm">
+                <h4 class="font-bold text-glo-navy text-base" data-i18n="slide2_title">ช่องทางสลากดิจิทัล สะดวก ปลอดภัย ซื้อตรงราคา 80 บาท</h4>
+                <p class="text-slate-600 leading-relaxed text-xs sm:text-sm">
+                    บริการสลากดิจิทัลถูกออกแบบมาเพื่อสร้างความเสมอภาค ป้องกันการขายสลากเกินราคา และเพิ่มความสะดวกปลอดภัยให้กับประชาชน สามารถทำรายการผ่านระบบดิจิทัลทางการได้ตลอด 24 ชั่วโมง
+                </p>
+            </div>
+            <div class="p-4 bg-slate-50 border-t text-right">
+                <button onclick="closeModal('digitalInfoModal')" class="bg-blue-800 text-white px-4 py-1.5 rounded-md text-xs font-semibold">ปิดหน้าต่าง</button>
+            </div>
+        </div>
+
+        <!-- Verification Guide Modal -->
+        <div id="verifyGuideModal" class="modal-box bg-white rounded-xl shadow-2xl max-w-lg w-full overflow-hidden hidden">
+            <div class="bg-glo-navy text-white p-4 flex justify-between items-center">
+                <h3 class="font-bold text-sm"><i class="fa-solid fa-shield-halved text-glo-gold mr-1.5"></i> คู่มือการสังเกตและตรวจสอบสลากกินแบ่งรัฐบาล</h3>
+                <button onclick="closeModal('verifyGuideModal')" class="text-slate-300 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto custom-scrollbar text-xs sm:text-sm text-slate-600">
+                <div class="border-l-4 border-glo-gold pl-3 py-1 bg-glo-goldlight/40">
+                    <h5 class="font-bold text-glo-navy">1. ลายน้ำบนกระดาษ</h5>
+                    <p>สลากของแท้เมื่อส่องกับแสงสว่างจะเห็นลายน้ำนกวายุภักษ์ชัดเจนในเนื้อกระดาษ</p>
+                </div>
+                <div class="border-l-4 border-glo-gold pl-3 py-1 bg-glo-goldlight/40">
+                    <h5 class="font-bold text-glo-navy">2. เส้นใยเรืองแสง</h5>
+                    <p>เนื้อกระดาษมีเส้นใยเรืองแสงผสมอยู่ ซึ่งสามารถมองเห็นได้ภายใต้แสงรังสีอัลตราไวโอเลต (UV Light)</p>
+                </div>
+                <div class="border-l-4 border-glo-gold pl-3 py-1 bg-glo-goldlight/40">
+                    <h5 class="font-bold text-glo-navy">3. รหัส บาร์โค้ด และ QR Code</h5>
+                    <p>มีบาร์โค้ดและ QR Code สำหรับการสแกนตรวจสอบข้อมูลด้วยเครื่องมือทางการของสำนักงานฯ</p>
+                </div>
+            </div>
+            <div class="p-4 bg-slate-50 border-t text-right">
+                <button onclick="closeModal('verifyGuideModal')" class="bg-glo-blue text-white px-4 py-1.5 rounded-md text-xs font-semibold">เข้าใจแล้ว</button>
+            </div>
+        </div>
+
+        <!-- Login Modal -->
+        <div id="loginModal" class="modal-box bg-white rounded-xl shadow-2xl max-w-sm w-full overflow-hidden hidden">
+            <div class="bg-glo-navy text-white p-4 flex justify-between items-center">
+                <h3 class="font-bold text-sm" data-i18n="login">เข้าสู่ระบบระบบงาน</h3>
+                <button onclick="closeModal('loginModal')" class="text-slate-300 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">ชื่อผู้ใช้งาน / Username</label>
+                    <input type="text" placeholder="ระบุชื่อผู้ใช้งาน" class="w-full p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-glo-blue/40 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">รหัสผ่าน / Password</label>
+                    <input type="password" placeholder="••••••••" class="w-full p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-glo-blue/40 focus:outline-none">
+                </div>
+                <button onclick="closeModal('loginModal')" class="w-full bg-glo-blue hover:bg-glo-navy text-white font-bold py-2.5 rounded-lg text-sm transition">
+                    เข้าสู่ระบบ
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript Handling Switcher & Features -->
+    <script>
+        // Strictly Bilingual Dictionary (TH / EN)
+        const translations = {
+            th: {
+                gov_portal: "เว็บไซต์อย่างเป็นทางการของรัฐบาลไทย",
+                login: "เข้าสู่ระบบ",
+                site_title: "สำนักงานสลากกินแบ่งรัฐบาล",
+                site_subtitle: "The Government Lottery Office",
+                search_ph: "ค้นหาข้อมูล, ประกาศ...",
+                search: "ค้นหา",
+                nav_home: "หน้าแรก",
+                nav_about: "เกี่ยวกับเรา",
+                nav_products: "ผลิตภัณฑ์และบริการ",
+                nav_news: "ข่าวสารและประกาศ",
+                nav_procurement: "จัดซื้อจัดจ้าง",
+                nav_contact: "ติดต่อเรา",
+                verify_btn: "คู่มือตรวจสอบสลาก",
+                slide1_tag: "นโยบายและพันธกิจองค์กร",
+                slide1_title: "สลากกินแบ่งรัฐบาลเพื่อสังคม มุ่งมั่นพัฒนาอย่างยั่งยืน",
+                slide1_desc: "สำนักงานสลากกินแบ่งรัฐบาล มุ่งมั่นนำรายได้ส่งต่อการพัฒนาประเทศ การศึกษา สุขอนามัย และการช่วยเหลือสังคมในทุกภาคส่วน",
+                learn_more: "อ่านเพิ่มเติม",
+                csr_activities: "กิจกรรมเพื่อสังคม (CSR)",
+                csr_highlight: "การแบ่งปันคืนสู่สังคม",
+                csr_quote: "\"สร้างโอกาส สร้างอนาคต เพื่อคนไทยทุกคน\"",
+                slide2_tag: "บริการดิจิทัลทันสมัย",
+                slide2_title: "ช่องทางสลากดิจิทัล สะดวก ปลอดภัย ซื้อตรงราคา 80 บาท",
+                slide2_desc: "ตรวจสอบแนวทางการซื้อและขึ้นเงินรางวัลผ่านแอปพลิเคชันทางการ ป้องกันการปลอมแปลงและรักษาสิทธิ์ของประชาชน",
+                app_info: "รายละเอียดบริการ",
+                digital_app_name: "แอปพลิเคชันอย่างเป็นทางการ",
+                portal_services_title: "ศูนย์บริการข้อมูลข่าวสาร และการตรวจสอบสลาก",
+                portal_services_subtitle: "ค้นหาคำแนะนำ ระเบียบการ และวิธีสังเกตสลากกินแบ่งรัฐบาลของแท้",
+                search_guidelines_label: "ค้นหารายละเอียดสลาก หรือ หัวข้อสอบถามเพิ่มเติม",
+                guidance_ph: "พิมพ์ข้อความ เช่น 'การขึ้นเงินรางวัล', 'วิธีดูสลากจริง'...",
+                search_btn: "ค้นหา",
+                verify_feature: "การตรวจสอบสลากกินแบ่ง",
+                section_news_title: "ข่าวสารและกิจกรรมสำนักงาน",
+                section_news_sub: "ติดตามข่าวประชาสัมพันธ์ กิจกรรม CSR และประกาศจัดซื้อจัดจ้าง",
+                tab_press: "ข่าวประชาสัมพันธ์",
+                tab_csr: "กิจกรรม GLO",
+                tab_procurement: "ประกาศจัดซื้อจัดจ้าง",
+                badge_press: "ข่าวประชาสัมพันธ์",
+                badge_csr: "กิจกรรม GLO",
+                badge_procurement: "จัดซื้อจัดจ้าง",
+                news1_title: "สำนักงานสลากกินแบ่งรัฐบาล มุ่งมั่นยกระดับองค์กรสู่ความยั่งยืนด้วยนวัตกรรมดิจิทัล",
+                news1_desc: "พัฒนาระบบการให้บริการเพื่อประชาชนอย่างครอบคลุม ยึดมั่นในความโปร่งใสและหลักธรรมาภิบาลระดับสากล",
+                news2_title: "โครงการ GLO ส่งเสริมการศึกษาและมอบทุนการศึกษาให้แก่เยาวชนในพื้นที่ห่างไกล",
+                news2_desc: "เดินหน้าสนับสนุนอนาคตของชาติ มอบโอกาสทางการศึกษาแก่โรงเรียนและนักเรียนที่ขาดแคลนทุนทรัพย์",
+                news3_title: "ประกาศประกวดราคาจัดซื้ออุปกรณ์เทคโนโลยีสารสนเทศ ประจำปีงบประมาณ 2027",
+                news3_desc: "รายละเอียดและข้อกำหนดทางเทคนิค (TOR) สำหรับผู้ประกอบการที่สนใจเข้าร่วมการเสนอราคา",
+                read_more: "อ่านรายละเอียด",
+                guidelines_heading: "ข้อควรรู้และบริการสำหรับประชาชน",
+                guidelines_sub: "แนวทางปฏิบัติ การติดต่อขึ้นเงินรางวัล และขั้นตอนทางกฎหมายอย่างถูกวิธี",
+                guide1_t: "ขั้นตอนการขึ้นเงินรางวัล",
+                guide1_d: "เอกสารที่ต้องใช้ สถานที่ให้บริการ และเงื่อนไขการหักค่าธรรมเนียมตามกฎหมาย",
+                guide2_t: "ข้อสังเกตสลากจริง",
+                guide2_d: "จุดสังเกตเนื้อกระดาษ ลายน้ำ รหัสบาร์โค้ด และการพิมพ์ป้องกันการปลอมแปลง",
+                guide3_t: "กฎหมายและระเบียบข้อบังคับ",
+                guide3_d: "พระราชบัญญัติสำนักงานสลากกินแบ่งรัฐบาล และข้อบังคับเกี่ยวกับการจำหน่าย",
+                guide4_t: "ร้องเรียน / แจ้งเบาะแส",
+                guide4_d: "ช่องทางการแจ้งเบาะแสการจำหน่ายเกินราคา หรือพฤติกรรมผิดระเบียบ",
+                footer_about: "องค์กรชั้นนำที่บริหารจัดการการออกสลากด้วยมาตรฐานสากล โปร่งใส คืนรายได้สู่สังคมเพื่อการพัฒนาประเทศอย่างยั่งยืน",
+                footer_address_t: "สถานที่ติดต่อ",
+                footer_address: "359 ถนนนนทบุรี ตำบลท่าทราย อำเภอเมืองนนทบุรี จังหวัดนนทบุรี 11000",
+                footer_links_t: "ลิงก์ที่เป็นประโยชน์",
+                privacy_policy: "นโยบายความเป็นส่วนตัว",
+                footer_follow: "ติดตามข่าวสาร",
+                footer_hours: "เวลาทำการ: จันทร์ - ศุกร์ 08.30 - 16.30 น. (เว้นวันหยุดราชการ)",
+                copyright: "© 2026 สำนักงานสลากกินแบ่งรัฐบาล (The Government Lottery Office). สงวนลิขสิทธิ์ทั้งหมด."
+            },
+            en: {
+                gov_portal: "Official Thai Government Portal",
+                login: "Sign In",
+                site_title: "The Government Lottery Office",
+                site_subtitle: "Government Lottery Office (GLO)",
+                search_ph: "Search information, announcements...",
+                search: "Search",
+                nav_home: "Home",
+                nav_about: "About Us",
+                nav_products: "Products & Services",
+                nav_news: "News & Announcements",
+                nav_procurement: "Procurement",
+                nav_contact: "Contact Us",
+                verify_btn: "Ticket Verification Guide",
+                slide1_tag: "Corporate Policy & Mission",
+                slide1_title: "GLO for Society: Committed to Sustainable Development",
+                slide1_desc: "The Government Lottery Office is dedicated to directing revenue toward national development, education, healthcare, and social support.",
+                learn_more: "Read More",
+                csr_activities: "Social Activities (CSR)",
+                csr_highlight: "Giving Back to Society",
+                csr_quote: "\"Creating Opportunities and Future for All Thais\"",
+                slide2_tag: "Modern Digital Services",
+                slide2_title: "Digital Ticket Channel: Convenient, Secure, Official Rate at 80 Baht",
+                slide2_desc: "Check procedures for official digital ticket management and claim rules to protect citizens' rights.",
+                app_info: "Service Details",
+                digital_app_name: "Official Application",
+                portal_services_title: "Information Center & Ticket Verification",
+                portal_services_subtitle: "Find guidance, regulations, and security features of official government tickets.",
+                search_guidelines_label: "Search ticket guidelines or query topics",
+                guidance_ph: "Type text e.g. 'Prize Claiming', 'Security Features'...",
+                search_btn: "Search",
+                verify_feature: "Ticket Verification System",
+                section_news_title: "News & Office Activities",
+                section_news_sub: "Stay updated with press releases, CSR activities, and procurement announcements.",
+                tab_press: "Press Releases",
+                tab_csr: "GLO Activities",
+                tab_procurement: "Procurement",
+                badge_press: "Press Release",
+                badge_csr: "GLO Activity",
+                badge_procurement: "Procurement",
+                news1_title: "The Government Lottery Office Advances Towards Digital Innovation Sustainability",
+                news1_desc: "Enhancing public service systems comprehensively, adhering to international transparency standards.",
+                news2_title: "GLO Project Supports Education & Grants Scholarships in Remote Areas",
+                news2_desc: "Continuing support for youth development by providing education opportunities for underprivileged students.",
+                news3_title: "Procurement Tender Announcement for Information Technology Equipment FY 2027",
+                news3_desc: "Details and technical specifications (TOR) for vendors interested in submitting proposals.",
+                read_more: "Read More",
+                guidelines_heading: "Public Guidelines & Services",
+                guidelines_sub: "Proper protocols, prize claim guidelines, and legal procedures.",
+                guide1_t: "Prize Claim Process",
+                guide1_d: "Required documents, service locations, and statutory fee deduction rules.",
+                guide2_t: "Authentic Ticket Features",
+                guide2_d: "Paper texture, watermark features, barcode security, and anti-counterfeiting printing.",
+                guide3_t: "Laws & Regulations",
+                guide3_d: "Government Lottery Office Act and official sales regulations.",
+                guide4_t: "Complaints & Reports",
+                guide4_d: "Channels for reporting overpriced ticket sales or non-compliant actions.",
+                footer_about: "A leading organization managing state lottery operations with international standards, transparency, and social contribution.",
+                footer_address_t: "Contact Location",
+                footer_address: "359 Nonthaburi Road, Tha Sai, Mueang Nonthaburi, Nonthaburi 11000",
+                footer_links_t: "Useful Links",
+                privacy_policy: "Privacy Policy",
+                footer_follow: "Follow Us",
+                footer_hours: "Office Hours: Mon - Fri 08:30 - 16:30 (Except Public Holidays)",
+                copyright: "© 2026 The Government Lottery Office (GLO). All rights reserved."
+            }
+        };
+
+        let currentLang = 'th';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            
+            if(lang === 'th') {
+                document.getElementById('lang-th').className = "px-2 py-0.5 rounded font-bold bg-glo-gold text-glo-navy";
+                document.getElementById('lang-en').className = "px-2 py-0.5 rounded text-slate-200 hover:text-white";
+            } else {
+                document.getElementById('lang-en').className = "px-2 py-0.5 rounded font-bold bg-glo-gold text-glo-navy";
+                document.getElementById('lang-th').className = "px-2 py-0.5 rounded text-slate-200 hover:text-white";
+            }
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+
+            document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+                const key = el.getAttribute('data-i18n-ph');
+                if (translations[lang][key]) {
+                    el.placeholder = translations[lang][key];
+                }
+            });
+        }
+
+        // Hero Banner Slide Control
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.hero-slide');
+        const dots = document.querySelectorAll('.slide-dot');
+
+        function setSlide(index) {
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].className = "slide-dot w-3 h-3 rounded-full bg-white/40 hover:bg-white transition-all duration-300";
+            
+            currentSlide = index;
+            
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].className = "slide-dot w-3 h-3 rounded-full bg-glo-gold transition-all duration-300";
+        }
+
+        setInterval(() => {
+            let nextSlide = (currentSlide + 1) % slides.length;
+            setSlide(nextSlide);
+        }, 6000);
+
+        // Mobile Menu Drawer Handler
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Modal Handler
+        function openModal(modalId) {
+            const backdrop = document.getElementById('modalBackdrop');
+            backdrop.classList.remove('hidden');
+            
+            document.querySelectorAll('.modal-box').forEach(box => box.classList.add('hidden'));
+            
+            const target = document.getElementById(modalId);
+            if(target) target.classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            const backdrop = document.getElementById('modalBackdrop');
+            backdrop.classList.add('hidden');
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        // Category Filter
+        function filterNews(type) {
+            const cards = document.querySelectorAll('.news-card');
+            const btns = document.querySelectorAll('.news-tab-btn');
+
+            btns.forEach(btn => {
+                btn.className = "news-tab-btn bg-slate-200 text-slate-700 hover:bg-slate-300 px-3 py-1.5 rounded-full transition";
+            });
+
+            event.target.className = "news-tab-btn active bg-glo-navy text-white px-3 py-1.5 rounded-full transition";
+
+            cards.forEach(card => {
+                if(type === 'all' || card.classList.contains(type)) {
+                    card.style.display = "flex";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+
+        // Guidance Search Simulation
+        function searchGuidance() {
+            const input = document.getElementById('guidanceSearchInput').value.trim();
+            const resultBox = document.getElementById('guidanceResult');
+            const resultText = document.getElementById('guidanceResultText');
+
+            if(!input) {
+                resultBox.classList.add('hidden');
+                return;
+            }
+
+            resultBox.classList.remove('hidden');
+            if(currentLang === 'th') {
+                resultText.textContent = `ข้อแนะนำสำหรับหัวข้อ "${input}": กรุณาติดต่อ GLO Call Center 0 2528 9999 หรือเข้าอ่านรายละเอียดได้ที่ศูนย์บริการประชาชน`;
+            } else {
+                resultText.textContent = `Guidance for keyword "${input}": Please contact GLO Call Center at 0 2528 9999 or check our online portal guidelines.`;
+            }
+        }
+
+        function handleSearch() {
+            const val = document.getElementById('headerSearchInput').value.trim();
+            if(val) {
+                searchGuidance();
+            }
+        }
+    </script>
+</body>
+</html>
+```
